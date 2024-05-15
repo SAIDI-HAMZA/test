@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String @id @unique @default(uuid())
+  email      String @unique() @db.VarChar(300)
+  first_name String @db.VarChar(64)
+  last_name  String @db.VarChar(64)
+  user_name  String @unique @db.VarChar(64)
+  job        String @db.VarChar(32)
+
+  access_roles UserAccessRole[] @default([TRANSLATOR])
+
+  hospital_department    HospitalDepartment @relation(fields: [hospital_department_id], references: [id])
+  hospital_department_id String
+
+  spoken_languages String[]
+
+  @@index([email], type: Hash)
+  @@map("user")
+}
+
+enum UserAccessRole {
+  ADMIN
+  TRANSLATOR
+}
+
+model Hospital {
+  id        String  @id @unique @default(uuid())
+  activated Boolean @default(false)
+  email     String  @unique
+  name      String
+
+  departments HospitalDepartment[]
+
+  @@map("hospital")
+}
+
+model HospitalDepartment {
+  id   String @id @unique @default(uuid())
+  name String
+
+  active_devices Device[]
+
+  hospital    Hospital @relation(fields: [hospital_id], references: [id], onDelete: Cascade)
+  hospital_id String
+
+  user User[]
+
+  @@map("hospital_department")
+}
+
+model Device {
+  id        String  @id @unique @default(uuid())
+  verified  Boolean @default(false)
+  unique_id String? @unique @db.VarChar(16)
+  name      String
+
+  department    HospitalDepartment @relation(fields: [department_id], references: [id])
+  department_id String
+
+  device_assignment    DeviceAssignment? @relation(fields: [device_assignment_id], references: [id])
+  device_assignment_id String?
+
+  conversations Conversation[]
+
+  created_at DateTime @default(now())
+
+  device_activation_codes DeviceActivationCodes[]
+
+  @@map("device")
+}
+
+model DeviceAssignment {
+  id        String   @id @unique @default(uuid())
+  full_name String   @db.VarChar(255)
+  devices   Device[]
+
+  @@map("device_assignment")
+}
+
+model DeviceActivationCodes {
+  id   String @id @unique @default(uuid())
+  code String @unique @db.VarChar(6)
+
+  device    Device @relation(fields: [device_id], references: [id])
+  device_id String
+
+  @@map("device_activation_code")
+}
+
+model Conversation {
+  id              String   @id @unique @default(uuid())
+  display_id      Int      @unique @default(autoincrement())
+  started_at      DateTime @default(now())
+  ended_at        DateTime @default(now())
+  updated_at      DateTime @default(now())
+  accurate        Boolean  @default(true)
+  review_due_date DateTime
+
+  lines ConversationLine[]
+
+  device    Device @relation(fields: [device_id], references: [id])
+  device_id String
+
+  @@map("conversation")
+}
+
+model ConversationLine {
+  id              String   @id @unique @default(uuid())
+  translated_text String   @db.Text
+  original_text   String   @db.Text
+  speaker         Speaker
+  added_at        DateTime
+
+  conversation    Conversation @relation(fields: [conversation_id], references: [id])
+  conversation_id String
+
+  locale    SupportedLanguage @relation(fields: [locale_id], references: [id])
+  locale_id String
+
+  audio                 ConversationAudio? @relation(fields: [conversation_audio_id], references: [id])
+  conversation_audio_id String?            @unique
+
+  @@map("conversation_line")
+}
+
+enum Speaker {
+  PATIENT
+  MEDICAL_TEAM
+}
+
+model SupportedLanguage {
+  id           String @id @unique @default(uuid())
+  locale_short String @db.VarChar(10)
+  locale_long  String @db.VarChar(10)
+
+  conversation_lines ConversationLine[]
+
+  @@map("supported_language")
+}
+
+model ConversationAudio {
+  id         String @id @unique @default(uuid())
+  audio_path String
+
+  conversation_line ConversationLine?
+
+  @@map("conversation_audio")
+}

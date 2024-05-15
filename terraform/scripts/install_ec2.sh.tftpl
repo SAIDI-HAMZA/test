@@ -1,0 +1,40 @@
+#!/bin/bash
+sudo echo "install ec2"
+sudo yum update -y
+sudo yum -y install nodejs awscli 
+
+# Install PostgreSQL server and initialize the database 
+# cluster for this server
+sudo yum -y install postgresql15-server
+sudo /usr/bin/postgresql-setup --initdb
+
+# Backup PostgreSQL authentication config file
+sudo mv /var/lib/pgsql/data/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf.bak
+
+# Create our new PostgreSQL authentication config file
+sudo touch /var/lib/pgsql/data/pg_hba.conf
+# sudo cat <<EOF > /var/lib/pgsql/data/pg_hba.conf
+sudo cat << EOF | sudo tee -a /var/lib/pgsql/data/pg_hba.conf
+${pg_hba_file}
+EOF
+
+# Update the IPs of the address to listen from PostgreSQL config
+sudo sed -i "59i listen_addresses = '*'" /var/lib/pgsql/data/postgresql.conf
+
+# Start the db service
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+
+sudo sed -i 's/##DATABASE_URL##/postgresql:\/\/${db_username}:${db_passwword}@${endpoint}\/${db_name}?schema=public/' /home/ec2-user/.env
+sudo sed -i 's/##AWS_BUCKET_TEMP##/${bucket_name}/' /home/ec2-user/.env
+sudo sed -i 's/##AWS_BUCKET_REGION##/${aws_region}/' /home/ec2-user/.env
+
+cd /home/ec2-user
+sudo npm install -y yarn -g
+sudo npm i -D typescript @types/node 
+sudo yarn prisma db push
+sudo yarn prisma generate
+sudo yarn global add pm2
+sudo pm2 start ./dist/index.js # or your file name
+
+
