@@ -21,7 +21,7 @@ L'API Hospeech propose deux points d'accès principaux:
 
 * **Description:** Convertit une chaîne de texte fournie en format audio.
 * **Méthode:** POST
-* **URL:** [https://aws.amazon.com/getting-started/hands-on/translate-text-between-languages-cloud/](https://aws.amazon.com/getting-started/hands-on/translate-text-between-languages-cloud/)
+* **URL:** [http://ec2-34-246-205-93.eu-west-1.compute.amazonaws.com:8080/translations/TextToAudio](http://ec2-34-246-205-93.eu-west-1.compute.amazonaws.com:8080/translations/TextToAudio)
 * **Corps de la requête (JSON):**
     * `text` (obligatoire): La chaîne de texte à convertir en audio.
     * `targetLanguage` (obligatoire): Le code de langue cible pour l'audio généré. (par exemple, fr-FR pour le français)
@@ -39,7 +39,7 @@ L'API Hospeech propose deux points d'accès principaux:
 
 * **Description:** Convertit un fichier audio téléchargé en texte.
 * **Méthode:** POST
-* **URL:** [https://www.greensiteinfo.com/hosting/54.225.126.34/](https://www.greensiteinfo.com/hosting/54.225.126.34/)
+* **URL:** [http://ec2-34-246-205-93.eu-west-1.compute.amazonaws.com:8080/translations/Streaming](http://ec2-34-246-205-93.eu-west-1.compute.amazonaws.com:8080/translations/Streaming)
 * **En-têtes de requête:**
     * Content-Type: application/octet-stream (**Désactivé dans la collection fournie**)
 * **Corps de la requête (formulaire-données):**
