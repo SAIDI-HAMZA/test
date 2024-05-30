@@ -73,7 +73,7 @@ file: /chemin/vers/votre/fichier/audio.wav
 * **Exemple de réponse:**
 ```
 {
-  "text": "Hello, world! I am an example of audio to convert to text.",
+  "text": "Hello, world! I am an example of audio to text.",
   "statusCode": 200,
   "statusMessage": "Success"
 }
