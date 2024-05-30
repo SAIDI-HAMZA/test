@@ -1,76 +1,68 @@
-# Hospeech API
+## Documentation de l'API Hospeech
 
-## Contents
+**Introduction**
 
-- [Introduction](#-introduction)
-- [Requirements](#-requirements)
-- [Installation](#-installation)
-- [Pushing your code](#-pushing-your-code)
-- [Documentation](#-documentation)
+Ce document fournit une description des fonctionnalités de l'API Hospeech, accompagnée d'exemples d'utilisation.
 
-## Introduction ff
+**Présentation de l'API Hospeech**
 
-This project is a Node.js API developed using Fastify. The purpose of this API is to integrate conversations from the app into an admin panel designed within the portal app. Additionally, in the future, the mobile app itself will utilize this API.
+Hospeech est une API qui permet de convertir du texte en parole et de la parole en texte. Elle offre des fonctionnalités pour générer des fichiers audio à partir de texte et pour transcrire des fichiers audio en texte.
 
-The backend functionality includes the management of conversations, supported languages, hospitals (along with their respective departments), and users.
+**Fonctionnalités clés**
 
-One notable aspect of this API is the absence of authentication management. Instead, it solely receives a token from the portal, which originates from Azure AD. The received token is subsequently decoded and verified.
+* **Texte-parole (TextToAudio):** Convertit du texte en audio dans une langue cible.
+* **Parole-texte (AudioToText):** Transcrit un fichier audio en texte dans une langue cible.
 
-## Requirements
+**Points d'accès**
 
-Please ensure that you have Node.js and yarn installed. The minimum required version of Node.js is 14.0.0.
-Additionally, make sure you have a PostgreSQL server running in the background.
-When cloning the project, remember to copy the contents of the `.env.dev` file into a new `.env` file.
+L'API Hospeech propose deux points d'accès principaux:
 
-## Installation
+**1. TextToAudio**
 
-### Install dependencies
-
-To install the necessary dependencies, please run the following command:
-
-```shell
-yarn install
+* **Description:** Convertit une chaîne de texte fournie en format audio.
+* **Méthode:** POST
+* **URL:** [https://aws.amazon.com/getting-started/hands-on/translate-text-between-languages-cloud/](https://aws.amazon.com/getting-started/hands-on/translate-text-between-languages-cloud/)
+* **Corps de la requête (JSON):**
+    * `text` (obligatoire): La chaîne de texte à convertir en audio.
+    * `targetLanguage` (obligatoire): Le code de langue cible pour l'audio généré. (par exemple, fr-FR pour le français)
+* **Exemple de requête:**
+```json
+{
+  "text": "Bonjour, monde ! Je suis un exemple de texte à convertir en audio.",
+  "targetLanguage": "fr-FR"
+}
 ```
+* **Réponse:** (Détails manquants dans la collection Postman fournie)
+* **Exemple de réponse:** (Détails manquants dans la collection Postman fournie)
 
-### Configure the database
+**2. AudioToText**
 
-Ensure that you have the correct credentials and that the provided database exists by updating the database connection string in the `.env` file.
-Once your database is up and running, execute the following command:
-
-```shell
-yarn prisma db push
+* **Description:** Convertit un fichier audio téléchargé en texte.
+* **Méthode:** POST
+* **URL:** [https://www.greensiteinfo.com/hosting/54.225.126.34/](https://www.greensiteinfo.com/hosting/54.225.126.34/)
+* **En-têtes de requête:**
+    * Content-Type: application/octet-stream (**Désactivé dans la collection fournie**)
+* **Corps de la requête (formulaire-données):**
+    * `originalLanguage` (obligatoire): Le code de langue du fichier audio source. (par exemple, fr-FR pour le français)
+    * `targetLanguage` (obligatoire): Le code de langue cible pour le texte converti. (par exemple, en-EN pour l'anglais)
+    * `file` (obligatoire): Le fichier audio à convertir (chemin d'accès au fichier sur le système effectuant la requête).
+* **Exemple de requête:**
 ```
+En-têtes:
+Content-Type: application/octet-stream
 
-This command will read the database schema located at `./prisma/schema.prisma` and create the required tables and other entities in the existing database.
-
-Then run :
-
-```shell
-yarn prisma generate
+Corps de la requête (formulaire-données):
+originalLanguage: fr-FR
+targetLanguage: en-EN
+file: /chemin/vers/votre/fichier/audio.wav
 ```
+* **Réponse:** (Détails manquants dans la collection Postman fournie)
+* **Exemple de réponse:** (Détails manquants dans la collection Postman fournie)
 
-This command will generate the prisma client according to the prisma schema.
+**Remarques**
 
-### Starting the API
+* La documentation pour les payloads de requête et de réponse est limitée en raison d'informations manquantes dans la collection Postman fournie.
+* Envisagez d'ajouter des détails tels que les codes de statut de réponse attendus, les mécanismes de gestion des erreurs et les modèles de données (schémas) pour les corps de requête et de réponse.
+* N'oubliez pas de tester soigneusement l'API avant de l'utiliser en production.
 
-To start the API, run :
-
-```shell
-yarn dev
-```
-
-## Pushing your code
-
-When incorporating modifications into the Git repository, it is necessary to perform a commit followed by a push to the GitHub platform. During the committing process, Husky will execute a set of quality assessments prior to finalizing the commit. In the event that these assessments do not meet the specified criteria, the commit action will be terminated.
-
-## Documentation
-
-The API's documentation is located at 0.0.0.0/docs.
-Here are a few links to the libraries we use:
-
-- [fastify](https://fastify.dev)
-- [yarn](https://yarnpkg.org)
-- [prisma](https://www.prisma.io)
-- [swagger](https://swagger.io)
-- [typebox](https://github.com/sinclairzx81/typebox)
-- [husky](https://typicode.github.io/husky)
+**N'hésitez pas à me contacter si vous avez des questions ou si vous souhaitez des précisions supplémentaires.**
