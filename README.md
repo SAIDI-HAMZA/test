@@ -32,8 +32,22 @@ L'API Hospeech propose deux points d'accès principaux:
   "targetLanguage": "fr-FR"
 }
 ```
-* **Réponse:** (Détails manquants dans la collection Postman fournie)
-* **Exemple de réponse:** (Détails manquants dans la collection Postman fournie)
+* **Réponse:**
+```json
+{
+  "audio": "base64encodedAudioData",
+  "statusCode": 200,
+  "statusMessage": "Success"
+}
+```
+* **Exemple de réponse:**
+```
+{
+  "audio": "SGVsbG8sIG1vbmRlICEgSW50ZXJtZWN0aW9uIG9mIHRoZSBBUEkgSG9zcGVlY2ggdG8gYmUgY29udmVydGVkIGludG8gYW51ZGlvLg==",
+  "statusCode": 200,
+  "statusMessage": "Success"
+}
+```
 
 **2. AudioToText**
 
@@ -41,11 +55,11 @@ L'API Hospeech propose deux points d'accès principaux:
 * **Méthode:** POST
 * **URL:** [http://ec2-34-246-205-93.eu-west-1.compute.amazonaws.com:8080/translations/Streaming](http://ec2-34-246-205-93.eu-west-1.compute.amazonaws.com:8080/translations/Streaming)
 * **En-têtes de requête:**
-    * Content-Type: application/octet-stream (**Désactivé dans la collection fournie**)
+    * Content-Type: application/octet-stream
 * **Corps de la requête (formulaire-données):**
     * `originalLanguage` (obligatoire): Le code de langue du fichier audio source. (par exemple, fr-FR pour le français)
     * `targetLanguage` (obligatoire): Le code de langue cible pour le texte converti. (par exemple, en-EN pour l'anglais)
-    * `file` (obligatoire): Le fichier audio à convertir (chemin d'accès au fichier sur le système effectuant la requête).
+    * `file` (obligatoire): Le fichier audio à convertir (chemin d'accès au fichier sur le système effectuant la requête). Le fichier audio doit être au format .wav et avoir une résolution de 16 bits.
 * **Exemple de requête:**
 ```
 En-têtes:
@@ -56,13 +70,11 @@ originalLanguage: fr-FR
 targetLanguage: en-EN
 file: /chemin/vers/votre/fichier/audio.wav
 ```
-* **Réponse:** (Détails manquants dans la collection Postman fournie)
-* **Exemple de réponse:** (Détails manquants dans la collection Postman fournie)
-
-**Remarques**
-
-* La documentation pour les payloads de requête et de réponse est limitée en raison d'informations manquantes dans la collection Postman fournie.
-* Envisagez d'ajouter des détails tels que les codes de statut de réponse attendus, les mécanismes de gestion des erreurs et les modèles de données (schémas) pour les corps de requête et de réponse.
-* N'oubliez pas de tester soigneusement l'API avant de l'utiliser en production.
-
-**N'hésitez pas à me contacter si vous avez des questions ou si vous souhaitez des précisions supplémentaires.**
+* **Exemple de réponse:**
+```
+{
+  "text": "Hello, world! I am an example of audio to convert to text.",
+  "statusCode": 200,
+  "statusMessage": "Success"
+}
+```
